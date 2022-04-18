@@ -1,8 +1,14 @@
-import React from "react";
-import "./App.css";
+import React from 'react';
+import './App.css';
+import Table from './components/Table';
+import StarWarsProvider from './context/StarWarsProvider';
 
 function App() {
-  return <span>Hello, Star!</span>;
+  return (
+    <StarWarsProvider>
+      <Table />
+    </StarWarsProvider>
+  );
 }
 
 export default App;
