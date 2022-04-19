@@ -14,16 +14,17 @@ const StarWarsProvider = ({ children }) => {
     const { value } = target;
     setSearchPlanetName({ filterByName: { name: value } });
   };
-
+  console.log(starWarsPlanets);
   const END_POINT = 'https://swapi-trybe.herokuapp.com/api/planets/';
   useEffect(() => {
     const getPlanets = async () => {
       const resp = await fetch(END_POINT);
       const data = await resp.json();
-      setStarWarsPlanets({ data: data.results });
+      setStarWarsPlanets(() => ({ dataSearched: data.results, data: data.results }));
     };
     getPlanets();
 
+    // setStarWarsPlanets({  dataSearched: data.results, data: data.results });
     // setStarWarsPlanets({ data: apiResult.results });
   }, []);
 

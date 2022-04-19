@@ -3,7 +3,6 @@ import StarWarsContext from '../context/StarWarsContext';
 
 const Table = () => {
   const { starWarsPlanets: { dataSearched } } = useContext(StarWarsContext);
-  console.log('table:', dataSearched);
   return (
     <table>
       <tr>
