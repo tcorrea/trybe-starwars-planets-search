@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import StarWarsContext from './StarWarsContext';
-import apiResult from '../services/apiResult.json';
+// import apiResult from '../services/apiResult.json';
 
 const StarWarsProvider = ({ children }) => {
   const contextValueForData = { data: {}, dataSearched: {} };
