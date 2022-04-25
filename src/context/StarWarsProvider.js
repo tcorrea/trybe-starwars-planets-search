@@ -4,10 +4,16 @@ import StarWarsContext from './StarWarsContext';
 // import apiResult from '../services/apiResult.json';
 
 const StarWarsProvider = ({ children }) => {
-  // Initial state
-  const contextValueForData = { data: {}, dataSearched: {} };
-  const contextValueForFilter = { filterByName: { name: '' } };
-  const contextValueFilterNumeric = {
+  // Hooks
+  const [starWarsPlanets, setStarWarsPlanets] = useState({
+    apiData: {},
+    dataFiltered: {},
+  });
+
+  const [searchPlanetName, setSearchPlanetName] = useState({
+    filterByName: { name: '' },
+  });
+  const [numericFilter, setNumericFilter] = useState({
     filterByNumericValues: [
       {
         column: 'population',
@@ -15,21 +21,14 @@ const StarWarsProvider = ({ children }) => {
         value: 0,
       },
     ],
-  };
-
-  // Hooks
-  const [starWarsPlanets, setStarWarsPlanets] = useState(contextValueForData);
-  const [searchPlanetName, setSearchPlanetName] = useState(
-    contextValueForFilter,
-  );
-  const [numericFilter, setNumericFilter] = useState(contextValueFilterNumeric);
-
+  });
+  // End Hooks
+  // Handlers
   const handleChange = ({ target }) => {
     const { value } = target;
     setSearchPlanetName({ filterByName: { name: value } });
   };
 
-  // Handlers
   const handleFilterChange = ({ target }) => {
     const { value, name } = target;
     setNumericFilter((prev) => ({
@@ -41,20 +40,18 @@ const StarWarsProvider = ({ children }) => {
 
   const handleClickFilter = () => {
     const { column, comparison, value } = numericFilter.filterByNumericValues[0];
-    console.log(numericFilter);
 
-    const data = starWarsPlanets.data.filter((planet) => {
-      // console.log('planet[column]:', planet[column]);
-      // console.log('column:', column);
+    const data = starWarsPlanets.apiData.filter((planet) => {
       if (comparison === 'maior que') return Number(planet[column]) > Number(value);
       if (comparison === 'menor que') return Number(planet[column]) < Number(value);
       if (comparison === 'igual a') return Number(planet[column]) === Number(value);
       return planet;
     });
 
-    setStarWarsPlanets((prev) => ({ ...prev, dataSearched: data }));
+    setStarWarsPlanets((prev) => ({ ...prev, dataFiltered: data }));
   };
 
+  // useEffects
   const END_POINT = 'https://swapi-trybe.herokuapp.com/api/planets/';
 
   useEffect(() => {
@@ -62,8 +59,8 @@ const StarWarsProvider = ({ children }) => {
       const resp = await fetch(END_POINT);
       const data = await resp.json();
       setStarWarsPlanets(() => ({
-        dataSearched: data.results,
-        data: data.results,
+        dataFiltered: data.results,
+        apiData: data.results,
       }));
     };
     getPlanets();
@@ -81,14 +78,12 @@ const StarWarsProvider = ({ children }) => {
       if (name !== '') {
         return {
           ...prev,
-          dataSearched: prev.data.filter((item) => item.name.includes(name)),
+          dataFiltered: prev.apiData.filter((item) => item.name.includes(name)),
         };
       }
-      return { ...prev, dataSearched: prev.data };
+      return { ...prev, dataFiltered: prev.apiData };
     });
   }, [searchPlanetName]);
-
-  useEffect(() => {});
 
   return (
     <StarWarsContext.Provider
