@@ -2,7 +2,9 @@ import React, { useContext } from 'react';
 import StarWarsContext from '../context/StarWarsContext';
 
 const Filter = () => {
-  const { handleFilterChange, numericFilter, handleClickFilter } = useContext(StarWarsContext);
+  const context = useContext(StarWarsContext);
+  const { handleFilterChange, numericFilter, handleClickFilter } = context;
+
   const { column, comparison, value } = numericFilter.filterByNumericValues[0];
   const columns = [
     'population',
