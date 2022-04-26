@@ -14,13 +14,7 @@ const StarWarsProvider = ({ children }) => {
     filterByName: { name: '' },
   });
   const [numericFilter, setNumericFilter] = useState({
-    filterByNumericValues: [
-      {
-        column: 'population',
-        comparison: 'maior que',
-        value: 0,
-      },
-    ],
+    filterByNumericValues: [],
   });
   // End Hooks
   // Handlers
@@ -28,27 +22,33 @@ const StarWarsProvider = ({ children }) => {
     const { value } = target;
     setSearchPlanetName({ filterByName: { name: value } });
   };
+  const [selected, setSelected] = useState({
+    column: 'population',
+    comparison: 'maior que',
+    value: 0,
+  });
 
   const handleFilterChange = ({ target }) => {
     const { value, name } = target;
-    setNumericFilter((prev) => ({
-      filterByNumericValues: [
-        { ...prev.filterByNumericValues[0], [name]: value },
-      ],
-    }));
+    setSelected((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleClickFilter = () => {
-    const { column, comparison, value } = numericFilter.filterByNumericValues[0];
-
-    const data = starWarsPlanets.apiData.filter((planet) => {
+    setNumericFilter((prev) => ({
+      filterByNumericValues: [...prev.filterByNumericValues, selected],
+    }));
+    console.log(numericFilter);
+    const { column, comparison, value } = selected;
+    const data = starWarsPlanets.dataFiltered.filter((planet) => {
       if (comparison === 'maior que') return Number(planet[column]) > Number(value);
       if (comparison === 'menor que') return Number(planet[column]) < Number(value);
       if (comparison === 'igual a') return Number(planet[column]) === Number(value);
-      return planet;
+      return Number(planet[column]) === Number(value);
     });
-
-    setStarWarsPlanets((prev) => ({ ...prev, dataFiltered: data }));
+    setStarWarsPlanets((prev) => ({
+      ...prev,
+      dataFiltered: data,
+    }));
   };
 
   // useEffects
@@ -92,7 +92,8 @@ const StarWarsProvider = ({ children }) => {
         search: handleChange,
         searchPlanetName: searchPlanetName.name,
         handleFilterChange,
-        numericFilter,
+        // numericFilter,
+        selected,
         handleClickFilter,
       } }
     >
