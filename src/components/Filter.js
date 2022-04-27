@@ -3,16 +3,9 @@ import StarWarsContext from '../context/StarWarsContext';
 
 const Filter = () => {
   const context = useContext(StarWarsContext);
-  const { handleFilterChange, selected, handleClickFilter } = context;
+  const { handleFilterChange, selected, handleClickFilter, columns } = context;
 
-  const { column, comparison, value } = selected; // numericFilter.filterByNumericValues[0];
-  const columns = [
-    'population',
-    'orbital_period',
-    'diameter',
-    'rotation_period',
-    'surface_water',
-  ];
+  const { column, comparison, value } = selected;
   const comparisonOpts = ['maior que', 'menor que', 'igual a'];
   return (
     <>

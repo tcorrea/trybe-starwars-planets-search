@@ -16,17 +16,24 @@ const StarWarsProvider = ({ children }) => {
   const [numericFilter, setNumericFilter] = useState({
     filterByNumericValues: [],
   });
+  const [selected, setSelected] = useState({
+    column: 'population',
+    comparison: 'maior que',
+    value: 0,
+  });
+  const [columns, setColumns] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
   // End Hooks
   // Handlers
   const handleChange = ({ target }) => {
     const { value } = target;
     setSearchPlanetName({ filterByName: { name: value } });
   };
-  const [selected, setSelected] = useState({
-    column: 'population',
-    comparison: 'maior que',
-    value: 0,
-  });
 
   const handleFilterChange = ({ target }) => {
     const { value, name } = target;
@@ -39,6 +46,10 @@ const StarWarsProvider = ({ children }) => {
     }));
     console.log(numericFilter);
     const { column, comparison, value } = selected;
+
+    // Removendo coluna do dropdown
+    setColumns((prev) => (prev.filter((item) => item !== column)));
+
     const data = starWarsPlanets.dataFiltered.filter((planet) => {
       if (comparison === 'maior que') return Number(planet[column]) > Number(value);
       if (comparison === 'menor que') return Number(planet[column]) < Number(value);
@@ -92,8 +103,8 @@ const StarWarsProvider = ({ children }) => {
         search: handleChange,
         searchPlanetName: searchPlanetName.name,
         handleFilterChange,
-        // numericFilter,
         selected,
+        columns,
         handleClickFilter,
       } }
     >
